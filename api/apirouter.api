@@ -1,0 +1,219 @@
+syntax = "v1"
+
+info (
+	title:  "API Router"
+	desc:   "API Router"
+	author: "Ye Zhenrong"
+	email:  "3471626272@qq.com"
+)
+
+// ==================== 通用响应结构 ====================
+type (
+	// 基础响应结构
+	BaseResponse {
+		Code    int    `json:"code"`
+		Message string `json:"message"`
+	}
+	// 错误响应
+	ErrorResponse {
+		Code    int    `json:"code"`
+		Message string `json:"message"`
+		Error   string `json:"error,omitempty"`
+	}
+)
+
+// ==================== 数据结构定义 ====================
+type (
+	// 用户注册数据
+	RegisterData {
+		UserId   int64  `json:"user_id"`
+		Username string `json:"username"`
+		Mail     string `json:"mail"`
+	}
+	// 用户登录数据
+	LoginData {
+		UserId      int64  `json:"user_id"`
+		Username    string `json:"username"`
+		Mail        string `json:"mail"`
+		AccessToken string `json:"access_token"`
+	}
+	// API密钥数据
+	ApiKeyInfo {
+		Id        string `json:"id"` // UUID: "550e8400-e29b-41d4-a716-446655440000"
+		Name      string `json:"name"`
+		ApiKey    string `json:"api_key"`
+		CreatedAt int64  `json:"created_at"`
+		Status    string `json:"status"`
+	}
+	// API密钥列表数据
+	ApiKeyListData {
+		ApiKeys []ApiKeyInfo `json:"api_keys"`
+		Total   int64        `json:"total"`
+	}
+	// 简单成功响应数据
+	// used in delete api key
+	SuccessData {
+		Message string `json:"message"`
+	}
+)
+
+// ==================== 请求结构定义 ====================
+type (
+	// 用户注册请求
+	RegisterReq {
+		Username string `json:"username" validate:"required,min=1"`
+		Password string `json:"password" validate:"required,min=1"`
+		Email    string `json:"email" validate:"required,email"`
+	}
+	// 用户登录请求
+	LoginReq {
+		Username string `json:"username" validate:"required"`
+		Password string `json:"password" validate:"required"`
+	}
+	// 生成API密钥请求
+	GenerateApiKeyReq {
+		Name        string `json:"name" validate:"required,min=1"`
+		Description string `json:"description"`
+		ExpiresAt   int64  `json:"expires_at"`
+	}
+	// 查询API密钥列表请求
+	ListApiKeysReq {
+		Page     int `form:"page,optional,default=1"`
+		PageSize int `form:"page_size,optional,default=10"`
+	}
+	// 获取API密钥详情请求
+	GetApiKeyReq {
+		Id string `path:"id"`
+	}
+	// 删除API密钥请求
+	DeleteApiKeyReq {
+		Id string `path:"id"`
+	}
+	// OpenAI Chat请求 - 完全兼容官方API
+	OpenAIChatReq {
+		Model            string              `json:"model"`
+		Messages         []OpenAIChatMessage `json:"messages"`
+		Temperature      float64             `json:"temperature,omitempty"`
+		MaxTokens        int                 `json:"max_tokens,omitempty"`
+		TopP             float64             `json:"top_p,omitempty"`
+		FrequencyPenalty float64             `json:"frequency_penalty,omitempty"`
+		PresencePenalty  float64             `json:"presence_penalty,omitempty"`
+		Stop             []string            `json:"stop,omitempty"`
+		Stream           bool                `json:"stream,omitempty"`
+		User             string              `json:"user,omitempty"`
+	}
+	OpenAIChatMessage {
+		Role    string `json:"role"` // system, user, assistant
+		Content string `json:"content"`
+		Name    string `json:"name,omitempty"`
+	}
+)
+
+// ==================== 统一响应结构 ====================
+type (
+	// 用户注册响应
+	RegisterResp {
+		Code    int          `json:"code"`
+		Message string       `json:"message"`
+		Data    RegisterData `json:"data,omitempty"`
+	}
+	// 用户登录响应
+	LoginResp {
+		Code    int       `json:"code"`
+		Message string    `json:"message"`
+		Data    LoginData `json:"data,omitempty"`
+	}
+	// 生成API密钥响应
+	GenerateApiKeyResp {
+		Code    int        `json:"code"`
+		Message string     `json:"message"`
+		Data    ApiKeyInfo `json:"data,omitempty"`
+	}
+	// 查询API密钥列表响应
+	ListApiKeysResp {
+		Code    int            `json:"code"`
+		Message string         `json:"message"`
+		Data    ApiKeyListData `json:"data,omitempty"`
+	}
+	GetApiKeyResp {
+		Code    int        `json:"code"`
+		Message string     `json:"message"`
+		Data    ApiKeyInfo `json:"data,omitempty"`
+	}
+	// 删除API密钥响应
+	DeleteApiKeyResp {
+		Code    int         `json:"code"`
+		Message string      `json:"message"`
+		Data    SuccessData `json:"data,omitempty"`
+	}
+	// OpenAI Chat响应 - 直接返回，不包装！
+	OpenAIChatResp {
+		Id      string             `json:"id"`
+		Object  string             `json:"object"`
+		Created int64              `json:"created"`
+		Model   string             `json:"model"`
+		Choices []OpenAIChatChoice `json:"choices"`
+		Usage   OpenAIUsage        `json:"usage"`
+	}
+	OpenAIUsage {
+		PromptTokens     int `json:"prompt_tokens"`
+		CompletionTokens int `json:"completion_tokens"`
+		TotalTokens      int `json:"total_tokens"`
+	}
+	OpenAIChatChoice {
+		Index        int               `json:"index"`
+		Message      OpenAIChatMessage `json:"message"`
+		FinishReason string            `json:"finish_reason"`
+	}
+)
+
+// ==================== 服务定义 ====================
+@server (
+	prefix: /api/v1
+)
+service apirouter {
+	// ==================== 用户认证接口 ====================
+	@doc "用户注册"
+	@handler RegisterHandler
+	post /auth/register (RegisterReq) returns (RegisterResp)
+
+	@doc "用户登录"
+	@handler LoginHandler
+	post /auth/login (LoginReq) returns (LoginResp)
+}
+
+@server (
+	prefix:     /api/v1
+	jwt:        Auth
+	middleware: AuthMiddleware
+)
+service apirouter {
+	// ==================== API密钥管理接口 ====================
+	@doc "生成单个API密钥"
+	@handler GenerateApiKeyHandler
+	post /apikeys (GenerateApiKeyReq) returns (GenerateApiKeyResp)
+
+	@doc "获取API密钥列表"
+	@handler ListApiKeysHandler
+	get /apikeys (ListApiKeysReq) returns (ListApiKeysResp)
+
+	@doc "获取API密钥详情"
+	@handler GetApiKeyHandler
+	get /apikeys/:id (GetApiKeyReq) returns (GetApiKeyResp)
+
+	@doc "删除API密钥"
+	@handler DeleteApiKeyHandler
+	delete /apikeys/:id (DeleteApiKeyReq) returns (DeleteApiKeyResp)
+}
+
+@server (
+	prefix:     /v1/openai
+	middleware: ApiKeyMiddleware
+)
+service apirouter {
+	// ==================== OpenAI 代理接口 ====================
+	@doc "OpenAI Chat 聊天接口"
+	@handler OpenAIChatHandler
+	post /chat/completions (OpenAIChatReq) returns (OpenAIChatResp)
+}
+

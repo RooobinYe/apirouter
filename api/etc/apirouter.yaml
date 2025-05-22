@@ -1,0 +1,6 @@
+Name: apirouter
+Host: 0.0.0.0
+Port: 8888
+Auth:
+  AccessSecret: my-jwt-secret-here
+  AccessExpire: 86400
