@@ -135,6 +135,7 @@ type (
 		Message string         `json:"message"`
 		Data    ApiKeyListData `json:"data,omitempty"`
 	}
+	// 获取API密钥详情响应
 	GetApiKeyResp {
 		Code    int        `json:"code"`
 		Message string     `json:"message"`

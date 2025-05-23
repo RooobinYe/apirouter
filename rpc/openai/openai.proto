@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package openai;
+option go_package="./openai";
+
+// ==================== 请求和响应消息定义 ====================
+
+// OpenAI Chat 消息
+message OpenAIChatMessage {
+  string role = 1;    // system, user, assistant
+  string content = 2;
+  string name = 3;    // optional
+}
+
+// OpenAI Chat 请求
+message OpenAIChatRequest {
+  string model = 1;
+  repeated OpenAIChatMessage messages = 2;
+  double temperature = 3;       // optional
+  int32 max_tokens = 4;         // optional
+  double top_p = 5;             // optional
+  double frequency_penalty = 6; // optional
+  double presence_penalty = 7;  // optional
+  repeated string stop = 8;     // optional
+  bool stream = 9;              // optional
+  string user = 10;             // optional
+  string api_key = 11;          // 用于验证的API密钥
+}
+
+// OpenAI 使用统计
+message OpenAIUsage {
+  int32 prompt_tokens = 1;
+  int32 completion_tokens = 2;
+  int32 total_tokens = 3;
+}
+
+// OpenAI Chat 选择
+message OpenAIChatChoice {
+  int32 index = 1;
+  OpenAIChatMessage message = 2;
+  string finish_reason = 3;
+}
+
+// OpenAI Chat 响应
+message OpenAIChatResponse {
+  int32 code = 1;           // 自定义状态码，用于内部错误处理
+  string message = 2;       // 自定义消息，用于内部错误处理
+  OpenAIChatData data = 3;  // 实际的OpenAI响应数据
+}
+
+// OpenAI Chat 数据（直接返回给客户端的格式）
+message OpenAIChatData {
+  string id = 1;
+  string object = 2;
+  int64 created = 3;
+  string model = 4;
+  repeated OpenAIChatChoice choices = 5;
+  OpenAIUsage usage = 6;
+}
+
+// 验证API密钥请求
+message ValidateApiKeyRequest {
+  string api_key = 1;
+}
+
+// 验证API密钥响应
+message ValidateApiKeyResponse {
+  int32 code = 1;
+  string message = 2;
+  ApiKeyValidationData data = 3;
+}
+
+// API密钥验证数据
+message ApiKeyValidationData {
+  bool valid = 1;
+  string key_id = 2;        // API密钥ID
+  int64 user_id = 3;        // 密钥所属用户ID
+  string status = 4;        // 密钥状态
+  int64 expires_at = 5;     // 过期时间
+}
+
+// ==================== 服务定义 ====================
+service OpenAI {
+  // OpenAI Chat 聊天接口
+  rpc ChatCompletions(OpenAIChatRequest) returns(OpenAIChatResponse);
+  
+  // 验证API密钥（供ApiKeyMiddleware使用）
+  rpc ValidateApiKey(ValidateApiKeyRequest) returns(ValidateApiKeyResponse);
+}

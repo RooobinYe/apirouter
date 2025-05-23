@@ -1,0 +1,140 @@
+syntax = "proto3";
+
+package apikey;
+option go_package="./apikey";
+
+// ==================== 请求和响应消息定义 ====================
+
+// 生成API密钥请求
+message GenerateApiKeyRequest {
+  int64 user_id = 1;
+  string name = 2;
+  string description = 3;
+  int64 expires_at = 4;     // optional
+}
+
+// 生成API密钥响应
+message GenerateApiKeyResponse {
+  int32 code = 1;
+  string message = 2;
+  ApiKeyInfo data = 3;
+}
+
+// API密钥信息
+message ApiKeyInfo {
+  string id = 1;            // UUID
+  string name = 2;
+  string api_key = 3;
+  int64 created_at = 4;
+  string status = 5;
+  int64 expires_at = 6;     // optional
+  string description = 7;   // optional
+}
+
+// 获取API密钥列表请求
+message ListApiKeysRequest {
+  int64 user_id = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+// 获取API密钥列表响应
+message ListApiKeysResponse {
+  int32 code = 1;
+  string message = 2;
+  ApiKeyListData data = 3;
+}
+
+// API密钥列表数据
+message ApiKeyListData {
+  repeated ApiKeyInfo api_keys = 1;
+  int64 total = 2;
+}
+
+// 获取API密钥详情请求
+message GetApiKeyRequest {
+  string id = 1;
+  int64 user_id = 2;        // 确保用户只能访问自己的API密钥
+}
+
+// 获取API密钥详情响应
+message GetApiKeyResponse {
+  int32 code = 1;
+  string message = 2;
+  ApiKeyInfo data = 3;
+}
+
+// 删除API密钥请求
+message DeleteApiKeyRequest {
+  string id = 1;
+  int64 user_id = 2;        // 确保用户只能删除自己的API密钥
+}
+
+// 删除API密钥响应
+message DeleteApiKeyResponse {
+  int32 code = 1;
+  string message = 2;
+  SuccessData data = 3;
+}
+
+// 成功操作数据
+message SuccessData {
+  string message = 1;
+}
+
+// 验证API密钥请求（内部服务使用）
+message ValidateKeyRequest {
+  string api_key = 1;
+}
+
+// 验证API密钥响应（内部服务使用）
+message ValidateKeyResponse {
+  int32 code = 1;
+  string message = 2;
+  KeyValidationData data = 3;
+}
+
+// 密钥验证数据
+message KeyValidationData {
+  bool valid = 1;
+  string key_id = 2;
+  int64 user_id = 3;
+  string status = 4;
+  int64 expires_at = 5;
+  string name = 6;
+}
+
+// 更新API密钥状态请求（内部使用，如禁用密钥等）
+message UpdateKeyStatusRequest {
+  string id = 1;
+  string status = 2;        // active, inactive, expired
+  int64 user_id = 3;
+}
+
+// 更新API密钥状态响应
+message UpdateKeyStatusResponse {
+  int32 code = 1;
+  string message = 2;
+  SuccessData data = 3;
+}
+
+// ==================== 服务定义 ====================
+service ApiKey {
+  // 生成API密钥
+  rpc GenerateApiKey(GenerateApiKeyRequest) returns(GenerateApiKeyResponse);
+  
+  // 获取API密钥列表
+  rpc ListApiKeys(ListApiKeysRequest) returns(ListApiKeysResponse);
+  
+  // 获取API密钥详情
+  rpc GetApiKey(GetApiKeyRequest) returns(GetApiKeyResponse);
+  
+  // 删除API密钥
+  rpc DeleteApiKey(DeleteApiKeyRequest) returns(DeleteApiKeyResponse);
+  
+  // 验证API密钥（供其他服务调用）
+  rpc ValidateKey(ValidateKeyRequest) returns(ValidateKeyResponse);
+  
+  // 更新API密钥状态（内部服务使用）
+  rpc UpdateKeyStatus(UpdateKeyStatusRequest) returns(UpdateKeyStatusResponse);
+}

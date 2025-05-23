@@ -1,0 +1,31 @@
+package logic
+
+import (
+	"context"
+
+	"apirouter/rpc/apikey/apikey"
+	"apirouter/rpc/apikey/internal/svc"
+
+	"github.com/zeromicro/go-zero/core/logx"
+)
+
+type UpdateKeyStatusLogic struct {
+	ctx    context.Context
+	svcCtx *svc.ServiceContext
+	logx.Logger
+}
+
+func NewUpdateKeyStatusLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateKeyStatusLogic {
+	return &UpdateKeyStatusLogic{
+		ctx:    ctx,
+		svcCtx: svcCtx,
+		Logger: logx.WithContext(ctx),
+	}
+}
+
+// 更新API密钥状态（内部服务使用）
+func (l *UpdateKeyStatusLogic) UpdateKeyStatus(in *apikey.UpdateKeyStatusRequest) (*apikey.UpdateKeyStatusResponse, error) {
+	// todo: add your logic here and delete this line
+
+	return &apikey.UpdateKeyStatusResponse{}, nil
+}
