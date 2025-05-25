@@ -5,6 +5,7 @@ import (
 
 	"apirouter/api/internal/svc"
 	"apirouter/api/internal/types"
+	"apirouter/rpc/user/userclient"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,7 +26,32 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 }
 
 func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err error) {
-	// todo: add your logic here and delete this line
+	loginResp, err := l.svcCtx.UserClient.Login(l.ctx, &userclient.LoginRequest{
+		Username: req.Username,
+		Password: req.Password,
+	})
+	if err != nil {
+		return &types.LoginResp{
+			Code:    500,
+			Message: "登录失败",
+		}, err
+	}
 
-	return
+	if loginResp.Code != 200 {
+		return &types.LoginResp{
+			Code:    int(loginResp.Code),
+			Message: loginResp.Message,
+		}, nil
+	}
+
+	return &types.LoginResp{
+		Code:    200,
+		Message: "登录成功",
+		Data: types.LoginData{
+			UserId:      loginResp.Data.UserId,
+			Username:    loginResp.Data.Username,
+			Email:       loginResp.Data.Email,
+			AccessToken: loginResp.Data.AccessToken,
+		},
+	}, nil
 }

@@ -3,8 +3,18 @@
 
 package types
 
+type ApiKey struct {
+	Id        string `json:"id"` // UUID: "550e8400-e29b-41d4-a716-446655440000"
+	UserId    int64  `json:"user_id"`
+	Name      string `json:"name"`
+	ApiKey    string `json:"api_key"`
+	CreatedAt int64  `json:"created_at"`
+	Status    string `json:"status"`
+}
+
 type ApiKeyInfo struct {
 	Id        string `json:"id"` // UUID: "550e8400-e29b-41d4-a716-446655440000"
+	UserId    int64  `json:"user_id"`
 	Name      string `json:"name"`
 	ApiKey    string `json:"api_key"`
 	CreatedAt int64  `json:"created_at"`
@@ -73,7 +83,7 @@ type ListApiKeysResp struct {
 type LoginData struct {
 	UserId      int64  `json:"user_id"`
 	Username    string `json:"username"`
-	Mail        string `json:"mail"`
+	Email       string `json:"email"`
 	AccessToken string `json:"access_token"`
 }
 
@@ -131,7 +141,7 @@ type OpenAIUsage struct {
 type RegisterData struct {
 	UserId   int64  `json:"user_id"`
 	Username string `json:"username"`
-	Mail     string `json:"mail"`
+	Email    string `json:"email"`
 }
 
 type RegisterReq struct {
@@ -148,4 +158,13 @@ type RegisterResp struct {
 
 type SuccessData struct {
 	Message string `json:"message"`
+}
+
+type User struct {
+	UserId    int64  `json:"user_id"`
+	Username  string `json:"username"`
+	Password  string `json:"password"`
+	Email     string `json:"email"`
+	Status    int    `json:"status"`
+	CreatedAt int64  `json:"created_at"`
 }

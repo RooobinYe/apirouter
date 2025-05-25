@@ -4,3 +4,18 @@ Port: 8888
 Auth:
   AccessSecret: my-jwt-secret-here
   AccessExpire: 86400
+Apikey:
+  Etcd:
+    Hosts:
+      - localhost:2379
+    Key: apikey.rpc
+Openai:
+  Etcd:
+    Hosts:
+      - localhost:2379
+    Key: openai.rpc
+User:
+  Etcd:
+    Hosts:
+      - localhost:2379
+    Key: user.rpc

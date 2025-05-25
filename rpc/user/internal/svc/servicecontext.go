@@ -1,13 +1,21 @@
 package svc
 
-import "apirouter/rpc/user/internal/config"
+import (
+	"apirouter/rpc/model"
+	"apirouter/rpc/user/internal/config"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
+)
 
 type ServiceContext struct {
-	Config config.Config
+	Config       config.Config
+	ApiKeysModel model.ApikeysModel
+	UsersModel   model.UsersModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
-		Config: c,
+		Config:       c,
+		ApiKeysModel: model.NewApikeysModel(sqlx.NewMysql(c.DataSource), c.Cache),
+		UsersModel:   model.NewUsersModel(sqlx.NewMysql(c.DataSource), c.Cache),
 	}
 }

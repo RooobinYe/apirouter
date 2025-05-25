@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"apirouter/rpc/user/userclient"
 	"context"
 
 	"apirouter/api/internal/svc"
@@ -25,7 +26,33 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 }
 
 func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterResp, err error) {
-	// todo: add your logic here and delete this line
+	rpcResp, err := l.svcCtx.UserClient.Register(l.ctx, &userclient.RegisterRequest{
+		Username: req.Username,
+		Password: req.Password,
+		Email:    req.Email,
+	})
+	if err != nil {
+		l.Logger.Errorf("register failed: %v", err)
+		return &types.RegisterResp{
+			Code:    500,
+			Message: "服务器内部错误",
+		}, nil
+	}
 
-	return
+	if rpcResp.Code != 200 {
+		return &types.RegisterResp{
+			Code:    int(rpcResp.Code),
+			Message: rpcResp.Message,
+		}, nil
+	}
+
+	return &types.RegisterResp{
+		Code:    200,
+		Message: "注册成功",
+		Data: types.RegisterData{
+			UserId:   rpcResp.Data.UserId,
+			Username: rpcResp.Data.Username,
+			Email:    rpcResp.Data.Email,
+		},
+	}, nil
 }

@@ -23,12 +23,13 @@ message GenerateApiKeyResponse {
 // API密钥信息
 message ApiKeyInfo {
   string id = 1;            // UUID
-  string name = 2;
-  string api_key = 3;
-  int64 created_at = 4;
-  string status = 5;
-  int64 expires_at = 6;     // optional
-  string description = 7;   // optional
+  int64 user_id = 2;
+  string name = 3;
+  string api_key = 4;
+  int64 created_at = 5;
+  string status = 6;
+  int64 expires_at = 7;     // optional
+  string description = 8;   // optional
 }
 
 // 获取API密钥列表请求

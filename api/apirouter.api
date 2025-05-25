@@ -22,24 +22,45 @@ type (
 	}
 )
 
+// ==================== 基础数据结构 ====================
+type (
+	User {
+		UserId    int64  `json:"user_id"`
+		Username  string `json:"username"`
+		Password  string `json:"password"`
+		Email     string `json:"email"`
+		Status    int    `json:"status"`
+		CreatedAt int64  `json:"created_at"`
+	}
+	ApiKey {
+		Id        string `json:"id"` // UUID: "550e8400-e29b-41d4-a716-446655440000"
+		UserId    int64  `json:"user_id"`
+		Name      string `json:"name"`
+		ApiKey    string `json:"api_key"`
+		CreatedAt int64  `json:"created_at"`
+		Status    string `json:"status"`
+	}
+)
+
 // ==================== 数据结构定义 ====================
 type (
 	// 用户注册数据
 	RegisterData {
 		UserId   int64  `json:"user_id"`
 		Username string `json:"username"`
-		Mail     string `json:"mail"`
+		Email    string `json:"email"`
 	}
 	// 用户登录数据
 	LoginData {
 		UserId      int64  `json:"user_id"`
 		Username    string `json:"username"`
-		Mail        string `json:"mail"`
+		Email       string `json:"email"`
 		AccessToken string `json:"access_token"`
 	}
 	// API密钥数据
 	ApiKeyInfo {
 		Id        string `json:"id"` // UUID: "550e8400-e29b-41d4-a716-446655440000"
+		UserId    int64  `json:"user_id"`
 		Name      string `json:"name"`
 		ApiKey    string `json:"api_key"`
 		CreatedAt int64  `json:"created_at"`

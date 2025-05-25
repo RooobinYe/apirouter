@@ -148,7 +148,7 @@ type RegisterData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Mail          string                 `protobuf:"bytes,3,opt,name=mail,proto3" json:"mail,omitempty"`
+	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -197,9 +197,9 @@ func (x *RegisterData) GetUsername() string {
 	return ""
 }
 
-func (x *RegisterData) GetMail() string {
+func (x *RegisterData) GetEmail() string {
 	if x != nil {
-		return x.Mail
+		return x.Email
 	}
 	return ""
 }
@@ -323,7 +323,7 @@ type LoginData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Mail          string                 `protobuf:"bytes,3,opt,name=mail,proto3" json:"mail,omitempty"`
+	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
 	AccessToken   string                 `protobuf:"bytes,4,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -373,9 +373,9 @@ func (x *LoginData) GetUsername() string {
 	return ""
 }
 
-func (x *LoginData) GetMail() string {
+func (x *LoginData) GetEmail() string {
 	if x != nil {
-		return x.Mail
+		return x.Email
 	}
 	return ""
 }
@@ -673,7 +673,7 @@ type UserInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Mail          string                 `protobuf:"bytes,3,opt,name=mail,proto3" json:"mail,omitempty"`
+	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
 	CreatedAt     int64                  `protobuf:"varint,4,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	Status        int32                  `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"` // 1: active, 0: inactive
 	unknownFields protoimpl.UnknownFields
@@ -724,9 +724,9 @@ func (x *UserInfo) GetUsername() string {
 	return ""
 }
 
-func (x *UserInfo) GetMail() string {
+func (x *UserInfo) GetEmail() string {
 	if x != nil {
-		return x.Mail
+		return x.Email
 	}
 	return ""
 }
@@ -758,22 +758,22 @@ const file_user_proto_rawDesc = "" +
 	"\x10RegisterResponse\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\x05R\x04code\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12&\n" +
-	"\x04data\x18\x03 \x01(\v2\x12.user.RegisterDataR\x04data\"W\n" +
+	"\x04data\x18\x03 \x01(\v2\x12.user.RegisterDataR\x04data\"Y\n" +
 	"\fRegisterData\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x1a\n" +
-	"\busername\x18\x02 \x01(\tR\busername\x12\x12\n" +
-	"\x04mail\x18\x03 \x01(\tR\x04mail\"F\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12\x14\n" +
+	"\x05email\x18\x03 \x01(\tR\x05email\"F\n" +
 	"\fLoginRequest\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\"b\n" +
 	"\rLoginResponse\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\x05R\x04code\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12#\n" +
-	"\x04data\x18\x03 \x01(\v2\x0f.user.LoginDataR\x04data\"w\n" +
+	"\x04data\x18\x03 \x01(\v2\x0f.user.LoginDataR\x04data\"y\n" +
 	"\tLoginData\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x1a\n" +
-	"\busername\x18\x02 \x01(\tR\busername\x12\x12\n" +
-	"\x04mail\x18\x03 \x01(\tR\x04mail\x12!\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12\x14\n" +
+	"\x05email\x18\x03 \x01(\tR\x05email\x12!\n" +
 	"\faccess_token\x18\x04 \x01(\tR\vaccessToken\"9\n" +
 	"\x14ValidateTokenRequest\x12!\n" +
 	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\"j\n" +
@@ -792,11 +792,11 @@ const file_user_proto_rawDesc = "" +
 	"\x13GetUserInfoResponse\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\x05R\x04code\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12\"\n" +
-	"\x04data\x18\x03 \x01(\v2\x0e.user.UserInfoR\x04data\"\x8a\x01\n" +
+	"\x04data\x18\x03 \x01(\v2\x0e.user.UserInfoR\x04data\"\x8c\x01\n" +
 	"\bUserInfo\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x1a\n" +
-	"\busername\x18\x02 \x01(\tR\busername\x12\x12\n" +
-	"\x04mail\x18\x03 \x01(\tR\x04mail\x12\x1d\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12\x14\n" +
+	"\x05email\x18\x03 \x01(\tR\x05email\x12\x1d\n" +
 	"\n" +
 	"created_at\x18\x04 \x01(\x03R\tcreatedAt\x12\x16\n" +
 	"\x06status\x18\x05 \x01(\x05R\x06status2\x81\x02\n" +
