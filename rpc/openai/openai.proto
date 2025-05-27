@@ -14,17 +14,8 @@ message OpenAIChatMessage {
 
 // OpenAI Chat 请求
 message OpenAIChatRequest {
-  string model = 1;
-  repeated OpenAIChatMessage messages = 2;
-  double temperature = 3;       // optional
-  int32 max_tokens = 4;         // optional
-  double top_p = 5;             // optional
-  double frequency_penalty = 6; // optional
-  double presence_penalty = 7;  // optional
-  repeated string stop = 8;     // optional
-  bool stream = 9;              // optional
-  string user = 10;             // optional
-  string api_key = 11;          // 用于验证的API密钥
+  string request_body = 1;      // 原始请求体JSON字符串
+  string api_key = 2;           // 用于验证的API密钥
 }
 
 // OpenAI 使用统计
@@ -50,12 +41,7 @@ message OpenAIChatResponse {
 
 // OpenAI Chat 数据（直接返回给客户端的格式）
 message OpenAIChatData {
-  string id = 1;
-  string object = 2;
-  int64 created = 3;
-  string model = 4;
-  repeated OpenAIChatChoice choices = 5;
-  OpenAIUsage usage = 6;
+  string raw_response = 1;  // OpenAI原始响应JSON字符串
 }
 
 // 验证API密钥请求

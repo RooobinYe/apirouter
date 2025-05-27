@@ -20,12 +20,15 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
+	userClient := userclient.NewUser(zrpc.MustNewClient(c.User))
+	apiKeyClient := apikeyclient.NewApiKey(zrpc.MustNewClient(c.Apikey))
+	
 	return &ServiceContext{
 		Config:           c,
-		AuthMiddleware:   middleware.NewAuthMiddleware().Handle,
-		ApiKeyMiddleware: middleware.NewApiKeyMiddleware().Handle,
-		UserClient:       userclient.NewUser(zrpc.MustNewClient(c.User)),
-		ApiKeyClient:     apikeyclient.NewApiKey(zrpc.MustNewClient(c.Apikey)),
+		AuthMiddleware:   middleware.NewAuthMiddleware(userClient).Handle,
+		ApiKeyMiddleware: middleware.NewApiKeyMiddleware(apiKeyClient).Handle,
+		UserClient:       userClient,
+		ApiKeyClient:     apiKeyClient,
 		OpenAIClient:     openaiclient.NewOpenAI(zrpc.MustNewClient(c.Openai)),
 	}
 }

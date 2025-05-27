@@ -3,7 +3,7 @@ CREATE TABLE `apikeys` (
   `user_id` bigint NOT NULL,
   `name` varchar(255) NOT NULL,
   `api_key` varchar(255) NOT NULL UNIQUE,
-  `created_at` bigint NOT NULL,
+  `created_at` bigint NOT NULL DEFAULT (UNIX_TIMESTAMP()),
   `status` varchar(20) NOT NULL DEFAULT 'active' COMMENT 'active, inactive, expired',
   PRIMARY KEY (`id`),
   KEY `idx_user_id` (`user_id`),

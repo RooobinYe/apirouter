@@ -39,3 +39,7 @@ bin/
 
 # AI
 .claude
+
+# Secrets and sensitive configuration files
+**/secrets.yaml
+**/secrets.yml

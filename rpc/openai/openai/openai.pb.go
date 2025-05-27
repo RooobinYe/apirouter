@@ -84,20 +84,11 @@ func (x *OpenAIChatMessage) GetName() string {
 
 // OpenAI Chat 请求
 type OpenAIChatRequest struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Model            string                 `protobuf:"bytes,1,opt,name=model,proto3" json:"model,omitempty"`
-	Messages         []*OpenAIChatMessage   `protobuf:"bytes,2,rep,name=messages,proto3" json:"messages,omitempty"`
-	Temperature      float64                `protobuf:"fixed64,3,opt,name=temperature,proto3" json:"temperature,omitempty"`                                   // optional
-	MaxTokens        int32                  `protobuf:"varint,4,opt,name=max_tokens,json=maxTokens,proto3" json:"max_tokens,omitempty"`                       // optional
-	TopP             float64                `protobuf:"fixed64,5,opt,name=top_p,json=topP,proto3" json:"top_p,omitempty"`                                     // optional
-	FrequencyPenalty float64                `protobuf:"fixed64,6,opt,name=frequency_penalty,json=frequencyPenalty,proto3" json:"frequency_penalty,omitempty"` // optional
-	PresencePenalty  float64                `protobuf:"fixed64,7,opt,name=presence_penalty,json=presencePenalty,proto3" json:"presence_penalty,omitempty"`    // optional
-	Stop             []string               `protobuf:"bytes,8,rep,name=stop,proto3" json:"stop,omitempty"`                                                   // optional
-	Stream           bool                   `protobuf:"varint,9,opt,name=stream,proto3" json:"stream,omitempty"`                                              // optional
-	User             string                 `protobuf:"bytes,10,opt,name=user,proto3" json:"user,omitempty"`                                                  // optional
-	ApiKey           string                 `protobuf:"bytes,11,opt,name=api_key,json=apiKey,proto3" json:"api_key,omitempty"`                                // 用于验证的API密钥
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RequestBody   string                 `protobuf:"bytes,1,opt,name=request_body,json=requestBody,proto3" json:"request_body,omitempty"` // 原始请求体JSON字符串
+	ApiKey        string                 `protobuf:"bytes,2,opt,name=api_key,json=apiKey,proto3" json:"api_key,omitempty"`                // 用于验证的API密钥
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *OpenAIChatRequest) Reset() {
@@ -130,72 +121,9 @@ func (*OpenAIChatRequest) Descriptor() ([]byte, []int) {
 	return file_openai_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *OpenAIChatRequest) GetModel() string {
+func (x *OpenAIChatRequest) GetRequestBody() string {
 	if x != nil {
-		return x.Model
-	}
-	return ""
-}
-
-func (x *OpenAIChatRequest) GetMessages() []*OpenAIChatMessage {
-	if x != nil {
-		return x.Messages
-	}
-	return nil
-}
-
-func (x *OpenAIChatRequest) GetTemperature() float64 {
-	if x != nil {
-		return x.Temperature
-	}
-	return 0
-}
-
-func (x *OpenAIChatRequest) GetMaxTokens() int32 {
-	if x != nil {
-		return x.MaxTokens
-	}
-	return 0
-}
-
-func (x *OpenAIChatRequest) GetTopP() float64 {
-	if x != nil {
-		return x.TopP
-	}
-	return 0
-}
-
-func (x *OpenAIChatRequest) GetFrequencyPenalty() float64 {
-	if x != nil {
-		return x.FrequencyPenalty
-	}
-	return 0
-}
-
-func (x *OpenAIChatRequest) GetPresencePenalty() float64 {
-	if x != nil {
-		return x.PresencePenalty
-	}
-	return 0
-}
-
-func (x *OpenAIChatRequest) GetStop() []string {
-	if x != nil {
-		return x.Stop
-	}
-	return nil
-}
-
-func (x *OpenAIChatRequest) GetStream() bool {
-	if x != nil {
-		return x.Stream
-	}
-	return false
-}
-
-func (x *OpenAIChatRequest) GetUser() string {
-	if x != nil {
-		return x.User
+		return x.RequestBody
 	}
 	return ""
 }
@@ -393,12 +321,7 @@ func (x *OpenAIChatResponse) GetData() *OpenAIChatData {
 // OpenAI Chat 数据（直接返回给客户端的格式）
 type OpenAIChatData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Object        string                 `protobuf:"bytes,2,opt,name=object,proto3" json:"object,omitempty"`
-	Created       int64                  `protobuf:"varint,3,opt,name=created,proto3" json:"created,omitempty"`
-	Model         string                 `protobuf:"bytes,4,opt,name=model,proto3" json:"model,omitempty"`
-	Choices       []*OpenAIChatChoice    `protobuf:"bytes,5,rep,name=choices,proto3" json:"choices,omitempty"`
-	Usage         *OpenAIUsage           `protobuf:"bytes,6,opt,name=usage,proto3" json:"usage,omitempty"`
+	RawResponse   string                 `protobuf:"bytes,1,opt,name=raw_response,json=rawResponse,proto3" json:"raw_response,omitempty"` // OpenAI原始响应JSON字符串
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -433,46 +356,11 @@ func (*OpenAIChatData) Descriptor() ([]byte, []int) {
 	return file_openai_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *OpenAIChatData) GetId() string {
+func (x *OpenAIChatData) GetRawResponse() string {
 	if x != nil {
-		return x.Id
+		return x.RawResponse
 	}
 	return ""
-}
-
-func (x *OpenAIChatData) GetObject() string {
-	if x != nil {
-		return x.Object
-	}
-	return ""
-}
-
-func (x *OpenAIChatData) GetCreated() int64 {
-	if x != nil {
-		return x.Created
-	}
-	return 0
-}
-
-func (x *OpenAIChatData) GetModel() string {
-	if x != nil {
-		return x.Model
-	}
-	return ""
-}
-
-func (x *OpenAIChatData) GetChoices() []*OpenAIChatChoice {
-	if x != nil {
-		return x.Choices
-	}
-	return nil
-}
-
-func (x *OpenAIChatData) GetUsage() *OpenAIUsage {
-	if x != nil {
-		return x.Usage
-	}
-	return nil
 }
 
 // 验证API密钥请求
@@ -666,21 +554,10 @@ const file_openai_proto_rawDesc = "" +
 	"\x11OpenAIChatMessage\x12\x12\n" +
 	"\x04role\x18\x01 \x01(\tR\x04role\x12\x18\n" +
 	"\acontent\x18\x02 \x01(\tR\acontent\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04name\"\xe7\x02\n" +
-	"\x11OpenAIChatRequest\x12\x14\n" +
-	"\x05model\x18\x01 \x01(\tR\x05model\x125\n" +
-	"\bmessages\x18\x02 \x03(\v2\x19.openai.OpenAIChatMessageR\bmessages\x12 \n" +
-	"\vtemperature\x18\x03 \x01(\x01R\vtemperature\x12\x1d\n" +
-	"\n" +
-	"max_tokens\x18\x04 \x01(\x05R\tmaxTokens\x12\x13\n" +
-	"\x05top_p\x18\x05 \x01(\x01R\x04topP\x12+\n" +
-	"\x11frequency_penalty\x18\x06 \x01(\x01R\x10frequencyPenalty\x12)\n" +
-	"\x10presence_penalty\x18\a \x01(\x01R\x0fpresencePenalty\x12\x12\n" +
-	"\x04stop\x18\b \x03(\tR\x04stop\x12\x16\n" +
-	"\x06stream\x18\t \x01(\bR\x06stream\x12\x12\n" +
-	"\x04user\x18\n" +
-	" \x01(\tR\x04user\x12\x17\n" +
-	"\aapi_key\x18\v \x01(\tR\x06apiKey\"\x82\x01\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\"O\n" +
+	"\x11OpenAIChatRequest\x12!\n" +
+	"\frequest_body\x18\x01 \x01(\tR\vrequestBody\x12\x17\n" +
+	"\aapi_key\x18\x02 \x01(\tR\x06apiKey\"\x82\x01\n" +
 	"\vOpenAIUsage\x12#\n" +
 	"\rprompt_tokens\x18\x01 \x01(\x05R\fpromptTokens\x12+\n" +
 	"\x11completion_tokens\x18\x02 \x01(\x05R\x10completionTokens\x12!\n" +
@@ -692,14 +569,9 @@ const file_openai_proto_rawDesc = "" +
 	"\x12OpenAIChatResponse\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\x05R\x04code\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12*\n" +
-	"\x04data\x18\x03 \x01(\v2\x16.openai.OpenAIChatDataR\x04data\"\xc7\x01\n" +
-	"\x0eOpenAIChatData\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x16\n" +
-	"\x06object\x18\x02 \x01(\tR\x06object\x12\x18\n" +
-	"\acreated\x18\x03 \x01(\x03R\acreated\x12\x14\n" +
-	"\x05model\x18\x04 \x01(\tR\x05model\x122\n" +
-	"\achoices\x18\x05 \x03(\v2\x18.openai.OpenAIChatChoiceR\achoices\x12)\n" +
-	"\x05usage\x18\x06 \x01(\v2\x13.openai.OpenAIUsageR\x05usage\"0\n" +
+	"\x04data\x18\x03 \x01(\v2\x16.openai.OpenAIChatDataR\x04data\"3\n" +
+	"\x0eOpenAIChatData\x12!\n" +
+	"\fraw_response\x18\x01 \x01(\tR\vrawResponse\"0\n" +
 	"\x15ValidateApiKeyRequest\x12\x17\n" +
 	"\aapi_key\x18\x01 \x01(\tR\x06apiKey\"x\n" +
 	"\x16ValidateApiKeyResponse\x12\x12\n" +
@@ -743,21 +615,18 @@ var file_openai_proto_goTypes = []any{
 	(*ApiKeyValidationData)(nil),   // 8: openai.ApiKeyValidationData
 }
 var file_openai_proto_depIdxs = []int32{
-	0, // 0: openai.OpenAIChatRequest.messages:type_name -> openai.OpenAIChatMessage
-	0, // 1: openai.OpenAIChatChoice.message:type_name -> openai.OpenAIChatMessage
-	5, // 2: openai.OpenAIChatResponse.data:type_name -> openai.OpenAIChatData
-	3, // 3: openai.OpenAIChatData.choices:type_name -> openai.OpenAIChatChoice
-	2, // 4: openai.OpenAIChatData.usage:type_name -> openai.OpenAIUsage
-	8, // 5: openai.ValidateApiKeyResponse.data:type_name -> openai.ApiKeyValidationData
-	1, // 6: openai.OpenAI.ChatCompletions:input_type -> openai.OpenAIChatRequest
-	6, // 7: openai.OpenAI.ValidateApiKey:input_type -> openai.ValidateApiKeyRequest
-	4, // 8: openai.OpenAI.ChatCompletions:output_type -> openai.OpenAIChatResponse
-	7, // 9: openai.OpenAI.ValidateApiKey:output_type -> openai.ValidateApiKeyResponse
-	8, // [8:10] is the sub-list for method output_type
-	6, // [6:8] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	6, // [6:6] is the sub-list for extension extendee
-	0, // [0:6] is the sub-list for field type_name
+	0, // 0: openai.OpenAIChatChoice.message:type_name -> openai.OpenAIChatMessage
+	5, // 1: openai.OpenAIChatResponse.data:type_name -> openai.OpenAIChatData
+	8, // 2: openai.ValidateApiKeyResponse.data:type_name -> openai.ApiKeyValidationData
+	1, // 3: openai.OpenAI.ChatCompletions:input_type -> openai.OpenAIChatRequest
+	6, // 4: openai.OpenAI.ValidateApiKey:input_type -> openai.ValidateApiKeyRequest
+	4, // 5: openai.OpenAI.ChatCompletions:output_type -> openai.OpenAIChatResponse
+	7, // 6: openai.OpenAI.ValidateApiKey:output_type -> openai.ValidateApiKeyResponse
+	5, // [5:7] is the sub-list for method output_type
+	3, // [3:5] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_openai_proto_init() }
