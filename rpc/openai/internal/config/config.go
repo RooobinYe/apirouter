@@ -13,7 +13,7 @@ type Config struct {
 	DataSource   string
 	Cache        cache.CacheConf
 	Apikey       zrpc.RpcClientConf
-	openAIAPIKey string // 缓存的API密钥，启动时读取
+	OpenAIAPIKey string // 缓存的API密钥，启动时读取
 }
 
 // SecretsConfig 密钥配置结构
@@ -33,11 +33,11 @@ func (c *Config) LoadSecrets() error {
 		return err
 	}
 
-	c.openAIAPIKey = secrets.OpenAIAPIKey
+	c.OpenAIAPIKey = secrets.OpenAIAPIKey
 	return nil
 }
 
 // GetOpenAIAPIKey 获取缓存的OpenAI API Key
 func (c *Config) GetOpenAIAPIKey() string {
-	return c.openAIAPIKey
+	return c.OpenAIAPIKey
 }

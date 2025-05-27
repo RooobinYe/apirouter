@@ -12,3 +12,4 @@ Apikey:
     Hosts:
       - localhost:2379
     Key: apikey.rpc
+OpenAIAPIKey: ""
