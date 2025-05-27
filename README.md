@@ -43,7 +43,67 @@ API Router 是一个现代化的微服务架构项目，采用 Go-Zero 微服务
 
 ## 🏗️ 系统架构
 
-picture
+```mermaid
+graph TB
+    %% Client
+    Client["Client"]:::external
+
+    %% API Gateway Subgraph
+    subgraph "API Gateway"
+        direction TB
+        JWTMW["JWT Middleware"]:::middleware
+        APIKeyMW["API Key Middleware"]:::middleware
+        Handler["Handler"]:::gateway
+        Logic["Logic"]:::gateway
+        SvcCtx["ServiceContext"]:::gateway
+    end
+
+    %% Microservices
+    UserService["User Service"]:::micro
+    ApiKeyService["ApiKey Service"]:::micro
+    OpenAIService["OpenAI Service"]:::micro
+    ModelService["Model Service"]:::micro
+
+    %% External Systems
+    etcd["etcd"]:::external
+    DB["Database"]:::external
+    ExternalOpenAI["External OpenAI API"]:::external
+
+    %% Connections
+    Client -->|"HTTP/REST"| JWTMW
+    JWTMW -->|"auth"| APIKeyMW
+    APIKeyMW -->|"validated"| Handler
+    Handler -->|"calls"| Logic
+    Logic -->|"uses"| SvcCtx
+
+    %% Gateway to microservices (gRPC)
+    Handler -->|"gRPC"| UserService
+    Handler -->|"gRPC"| ApiKeyService
+    Handler -->|"gRPC"| OpenAIService
+
+    %% Service registration
+    UserService -->|"register/discover"| etcd
+    ApiKeyService -->|"register/discover"| etcd
+    OpenAIService -->|"register/discover"| etcd
+    ModelService -->|"register/discover"| etcd
+
+    %% Service to DB and External API
+    ModelService -->|"SQL"| DB
+    OpenAIService -->|"HTTP"| ExternalOpenAI
+
+    %% Click Events
+    click APIGateway "https://github.com/rooobinye/apirouter/tree/master/api/"
+    click UserService "https://github.com/rooobinye/apirouter/tree/master/rpc/user/"
+    click ApiKeyService "https://github.com/rooobinye/apirouter/tree/master/rpc/apikey/"
+    click OpenAIService "https://github.com/rooobinye/apirouter/tree/master/rpc/openai/"
+    click ModelService "https://github.com/rooobinye/apirouter/tree/master/rpc/model/"
+
+    %% Styles
+    classDef gateway fill:#D0E8FF,stroke:#0971B2,color:#000
+    classDef micro fill:#DFFFE0,stroke:#4B8B3B,color:#000
+    classDef external fill:#E0E0E0,stroke:#666,color:#000
+    classDef middleware fill:#FFF5D0,stroke:#D8A600,color:#000
+```
 
 项目采用微服务架构，包含以下服务：
 
